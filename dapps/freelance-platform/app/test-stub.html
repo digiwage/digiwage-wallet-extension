@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>DigiWage Freelance Platform (extension-free test harness)</title></head>
+<body>
+<!--
+  Loads the app with a fake window.digiwageLight so you can exercise the
+  read path (job list, applicant list) without installing the real
+  extension. callContract proxies to the actual deployed contract through
+  digiwage-explorer-api's insight-api routes, so this is a genuine read against
+  live chain state -- only sendToContract (anything that opens a
+  confirmation popup and signs) is stubbed out, since that needs a real
+  wallet. Point at whatever forktest explorer API you're running; the
+  default here assumes one on localhost:7001.
+-->
+<div id="root"></div>
+<script>
+window.digiwageLight = {
+  getCurrentAddress: () => Promise.resolve('qZzVTwt7WpUkZkc5vnfruQCArHyy8LL5SQ'),
+  callContract: (address, data) => fetch(`http://127.0.0.1:7001/insight-api/contracts/${address}/hash/${data}/call`).then(r => r.json()),
+  sendToContract: () => Promise.reject(new Error('sendToContract is not stubbed here -- install the real extension to test posting/applying/hiring.'))
+};
+</script>
+<script type="module" src="/src/main.jsx"></script>
+</body>
+</html>

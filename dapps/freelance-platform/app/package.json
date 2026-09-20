@@ -1,0 +1,22 @@
+{
+  "name": "digiwage-freelance-platform-dapp",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "dependencies": {
+    "bs58": "^6.0.0",
+    "ethereumjs-abi": "^0.6.8",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "vite-plugin-node-polyfills": "^0.28.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.4.6"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "network": "digiwage_forktest",
+  "contract": "FreelanceHub",
+  "contractAddress": "74068ff826fc060dfeea3a3b9e6870c8e7470732",
+  "deploymentTxId": "13448dd62f014b439b4d0704b61ffc62c9d7c1421636db5aba35d98fb96d0ed4",
+  "deployedAtBlock": 595,
+  "compiler": "solc 0.8.26",
+  "evmVersion": "shanghai",
+  "note": "Redeploying will change contractAddress -- update src/contract.js's CONTRACT_ADDRESS in ../app to match. Shanghai is safe to target here: this chain's evmone activates it at consensus.digiwage_contract_height (block 30 on forktest, see kernel/chainparams.cpp), well before this contract's deployment height."
+}

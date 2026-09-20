@@ -1,0 +1,724 @@
+:root {
+  --dw-bg: #131316;
+  --dw-surface: #1c1c21;
+  --dw-surface-2: #24242b;
+  --dw-surface-hover: #2c2c34;
+  --dw-border: rgba(255,255,255,0.07);
+  --dw-border-strong: rgba(255,255,255,0.14);
+  --dw-text: #ffffff;
+  --dw-text-secondary: rgba(255,255,255,0.62);
+  --dw-text-faint: rgba(255,255,255,0.36);
+  --dw-accent: #f0c454;
+  --dw-accent-hover: #f4d074;
+  --dw-accent-contrast: #17140b;
+  --dw-success: #3dd598;
+  --dw-success-bg: rgba(61,213,152,0.13);
+  --dw-danger: #ff6b6b;
+  --dw-danger-bg: rgba(255,107,107,0.12);
+  --dw-radius-s: 8px;
+  --dw-radius-m: 12px;
+  --dw-radius-l: 18px;
+  --dw-radius-pill: 999px;
+  --dw-shadow-1: 0 1px 3px rgba(0,0,0,0.28);
+  --dw-shadow-2: 0 10px 30px rgba(0,0,0,0.38);
+  --dw-shadow-accent: 0 6px 16px rgba(240,196,84,0.24);
+  --dw-ease: 150ms cubic-bezier(.4,0,.2,1);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+}
+
+.App {
+  width: 380px;
+  min-height: 600px;
+  background: var(--dw-bg);
+  color: var(--dw-text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+.App ::selection {
+  background: rgba(240,196,84,0.35);
+}
+
+/* ---------- Top bar ---------- */
+
+.dw-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 11px 12px 11px 16px;
+}
+
+.dw-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dw-brand-logo {
+  height: 24px;
+  width: 24px;
+  display: block;
+}
+
+.dw-brand-name {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.1px;
+  color: var(--dw-text);
+}
+
+.dw-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.dw-icon-btn {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  color: var(--dw-text-secondary) !important;
+  transition: background var(--dw-ease), color var(--dw-ease), transform var(--dw-ease) !important;
+}
+
+.dw-icon-btn:hover {
+  background: var(--dw-surface-2) !important;
+  color: var(--dw-text) !important;
+}
+
+.dw-icon-btn:active {
+  transform: scale(0.92);
+}
+
+.dw-network-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--dw-surface-2);
+  border: 1px solid var(--dw-border);
+  border-radius: var(--dw-radius-pill);
+  padding: 6px 9px 6px 11px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--dw-text);
+  cursor: pointer;
+  margin-right: 2px;
+  transition: background var(--dw-ease), border-color var(--dw-ease);
+}
+
+.dw-network-pill:hover {
+  background: var(--dw-surface-hover);
+  border-color: var(--dw-border-strong);
+}
+
+.dw-network-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.dw-network-dot.mainnet {
+  background: var(--dw-success);
+  box-shadow: 0 0 0 3px var(--dw-success-bg);
+}
+
+.dw-network-dot.forktest {
+  background: var(--dw-accent);
+  box-shadow: 0 0 0 3px rgba(240,196,84,0.16);
+}
+
+.dw-network-caret {
+  font-size: 16px !important;
+  opacity: 0.7;
+}
+
+/* ---------- Hero balance card ---------- */
+
+.dw-cards-wrap {
+  display: flex;
+  flex-direction: column;
+  padding: 0 0 8px;
+}
+
+.dw-hero {
+  margin: 10px 14px 0;
+  background: linear-gradient(165deg, var(--dw-surface-2) 0%, var(--dw-surface) 65%);
+  border: 1px solid var(--dw-border);
+  border-radius: var(--dw-radius-l);
+  padding: 16px 18px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: var(--dw-shadow-1);
+}
+
+.dw-hero-toprow {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dw-account-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--dw-surface);
+  border: 1px solid var(--dw-border);
+  border-radius: var(--dw-radius-pill);
+  padding: 3px 10px 3px 3px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--dw-text);
+  cursor: pointer;
+  transition: border-color var(--dw-ease), background var(--dw-ease);
+}
+
+.dw-account-chip:hover {
+  border-color: var(--dw-border-strong);
+  background: var(--dw-surface-hover);
+}
+
+.dw-identicon-ring {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  padding: 2px;
+  background: linear-gradient(135deg, var(--dw-accent), #7c6ad1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dw-identicon-ring img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: block;
+}
+
+.dw-caret-sm {
+  font-size: 15px !important;
+  opacity: 0.65;
+}
+
+.dw-balance-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 22px;
+}
+
+.dw-balance-amount {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.7px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.dw-balance-ticker {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--dw-accent-contrast);
+  background: var(--dw-accent);
+  padding: 3px 8px;
+  border-radius: var(--dw-radius-pill);
+  letter-spacing: 0.3px;
+}
+
+.dw-balance-usd {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--dw-text-secondary);
+  font-weight: 500;
+}
+
+.dw-address-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-top: 20px;
+  background: var(--dw-surface);
+  border: 1px solid var(--dw-border);
+  border-radius: var(--dw-radius-pill);
+  padding: 3px 3px 3px 13px;
+  max-width: 100%;
+}
+
+.dw-address-text {
+  font-size: 11.5px;
+  font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+  color: var(--dw-text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 148px;
+  letter-spacing: 0.1px;
+}
+
+.dw-address-action {
+  width: 27px !important;
+  height: 27px !important;
+  color: var(--dw-text-secondary) !important;
+  transition: color var(--dw-ease), background var(--dw-ease) !important;
+}
+
+.dw-address-action:hover {
+  color: var(--dw-text) !important;
+  background: var(--dw-surface-2) !important;
+}
+
+/* ---------- Send / Receive action row ---------- */
+
+.dw-actions-row {
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  padding: 20px 20px 6px;
+}
+
+.dw-action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+}
+
+.dw-action-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 16px;
+  background: var(--dw-accent);
+  color: var(--dw-accent-contrast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--dw-shadow-accent);
+  transition: transform var(--dw-ease), filter var(--dw-ease), box-shadow var(--dw-ease);
+}
+
+.dw-action-btn:hover .dw-action-circle {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+  box-shadow: 0 10px 20px rgba(240,196,84,0.3);
+}
+
+.dw-action-btn:active .dw-action-circle {
+  transform: translateY(0) scale(0.95);
+}
+
+.dw-action-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--dw-text-secondary);
+  transition: color var(--dw-ease);
+}
+
+.dw-action-btn:hover .dw-action-label {
+  color: var(--dw-text);
+}
+
+/* ---------- Sections / activity list ---------- */
+
+.dw-section {
+  margin: 18px 14px 14px;
+  background: var(--dw-surface);
+  border: 1px solid var(--dw-border);
+  border-radius: var(--dw-radius-l);
+  overflow: hidden;
+}
+
+.dw-section-title {
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--dw-text-faint);
+  padding: 14px 16px 8px;
+}
+
+.dw-empty {
+  color: var(--dw-text-faint);
+  font-size: 13px;
+  text-align: center;
+  padding: 30px 16px;
+}
+
+.dw-tx-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 16px;
+  border-top: 1px solid var(--dw-border);
+  text-decoration: none;
+  color: inherit;
+  transition: background var(--dw-ease);
+}
+
+.dw-tx-row:hover {
+  background: var(--dw-surface-2);
+}
+
+.dw-tx-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dw-tx-icon.receive {
+  background: var(--dw-success-bg);
+  color: var(--dw-success);
+}
+
+.dw-tx-icon.send {
+  background: rgba(240,196,84,0.14);
+  color: var(--dw-accent);
+}
+
+.dw-tx-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dw-tx-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--dw-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dw-tx-sub {
+  font-size: 11.5px;
+  color: var(--dw-text-faint);
+}
+
+.dw-tx-amount {
+  font-size: 13.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.dw-view-more {
+  text-align: center;
+  padding: 8px 0 14px;
+}
+
+.dw-text-btn {
+  text-transform: none !important;
+  font-weight: 600 !important;
+  font-size: 12.5px !important;
+}
+
+/* ---------- Full-screen sheets (send/receive/keys/import) ---------- */
+
+.dw-sheet-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 22px 18px;
+  background: var(--dw-bg);
+  min-height: 100%;
+}
+
+.dw-sheet-card {
+  background: var(--dw-surface);
+  border: 1px solid var(--dw-border);
+  border-radius: var(--dw-radius-l);
+  padding: 22px 20px;
+  width: 100%;
+  max-width: 340px;
+  box-shadow: var(--dw-shadow-1);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.dw-sheet-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--dw-text);
+}
+
+.dw-sheet-subtitle {
+  font-size: 13px;
+  color: var(--dw-text-secondary);
+  margin-bottom: 4px;
+  line-height: 1.5;
+}
+
+.dw-field {
+  width: 100%;
+}
+
+.dw-primary-btn {
+  margin-top: 18px !important;
+  width: 100% !important;
+  height: 48px !important;
+  border-radius: var(--dw-radius-m) !important;
+  background: var(--dw-accent) !important;
+  color: var(--dw-accent-contrast) !important;
+  font-weight: 700 !important;
+  text-transform: none !important;
+  font-size: 14px !important;
+  letter-spacing: 0.1px !important;
+  box-shadow: var(--dw-shadow-accent) !important;
+  transition: transform var(--dw-ease), filter var(--dw-ease) !important;
+}
+
+.dw-primary-btn:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+.dw-primary-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.dw-primary-btn.mui-disabled,
+.dw-primary-btn[disabled] {
+  opacity: 0.35;
+  box-shadow: none !important;
+}
+
+.dw-link-btn {
+  margin-top: 14px !important;
+  color: var(--dw-text-secondary) !important;
+  font-size: 12px !important;
+  text-transform: none !important;
+  font-weight: 500 !important;
+}
+
+.dw-link-btn:hover {
+  color: var(--dw-text) !important;
+  background: transparent !important;
+}
+
+.dw-warning-box {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  background: var(--dw-danger-bg);
+  border: 1px solid rgba(255,107,107,0.28);
+  border-radius: var(--dw-radius-m);
+  padding: 11px 12px;
+  font-size: 12.5px;
+  color: #ffb4b4;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.dw-mono-box {
+  font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+  font-size: 12.5px;
+  color: var(--dw-text-secondary);
+  background: var(--dw-surface-2);
+  border: 1px solid var(--dw-border);
+  border-radius: var(--dw-radius-m);
+  padding: 12px;
+  word-break: break-all;
+  text-align: left;
+  width: 100%;
+  margin-top: 12px;
+}
+
+.dw-qr-frame {
+  display: flex;
+  justify-content: center;
+  padding: 6px 0 16px;
+}
+
+.dw-qr-frame img {
+  border-radius: var(--dw-radius-m);
+  border: 8px solid #ffffff;
+  display: block;
+}
+
+.dw-sheet-appbar {
+  background: var(--dw-surface) !important;
+  border-bottom: 1px solid var(--dw-border);
+  box-shadow: none !important;
+}
+
+/* ---------- Onboarding ---------- */
+
+.dw-onboard-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 480px;
+  justify-content: center;
+  padding: 24px 16px;
+}
+
+.dw-onboard-footer {
+  font-size: 11.5px;
+  color: var(--dw-text-faint);
+  text-align: center;
+  margin-top: 4px;
+}
+
+.dw-onboard-card {
+  width: 100%;
+  max-width: 320px;
+  background: var(--dw-surface);
+  border: 1px solid var(--dw-border);
+  border-radius: var(--dw-radius-l);
+  padding: 30px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: var(--dw-shadow-2);
+  margin-bottom: 16px;
+}
+
+.dw-onboard-logo {
+  height: 60px;
+  width: 60px;
+  margin-bottom: 16px;
+  filter: drop-shadow(0 8px 18px rgba(240,196,84,0.28));
+}
+
+.dw-onboard-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 18px;
+  text-align: center;
+  color: var(--dw-text);
+}
+
+.dw-onboard-row {
+  width: 100%;
+  display: flex;
+  gap: 12px;
+}
+
+.dw-onboard-row > * {
+  flex: 1;
+}
+
+/* ---------- Transaction confirmation (dApp) ---------- */
+
+.dw-confirm-body {
+  padding: 18px 20px 28px;
+  background: var(--dw-bg);
+  min-height: 100%;
+}
+
+.dw-confirm-field {
+  width: 100%;
+  margin-bottom: 2px !important;
+}
+
+/* ================================================================
+   Legacy classes below are still used by screens this redesign pass
+   did not touch (dapp grid, network/reset dialogs, mnemonic backup
+   dialog) -- left in place so those keep working unchanged.
+   ================================================================ */
+
+.card {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-bottom: 20px;
+}
+
+.sign-in-card {
+  width: 320px;
+  padding: 20px 0;
+  margin: 20px 20px 0 20px;
+}
+
+.grid-root {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  overflow: hidden;
+  background-color: transparent;
+}
+
+.grid-list {
+  width: 100%;
+  height: 400px;
+}
+
+.grid-icon {
+  color: #ffffff;
+}
+
+.grid-image {
+  max-width: 150px;
+  max-height: 150px;
+}
+
+
+/* ---------- Side panel mode ----------
+   The popup is a fixed 380px column. In the side panel the same UI fills
+   the panel: the top bar stays pinned, the content scrolls beneath it and is
+   centred in a comfortable reading column when the panel is wide. */
+body.dw-sidepanel-body {
+  background: var(--dw-bg);
+  overflow: hidden;
+}
+
+.App.dw-sidepanel {
+  width: 100%;
+  min-width: 320px;
+  height: 100vh;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.App.dw-sidepanel .dw-sheet-appbar {
+  flex: 0 0 auto;
+}
+
+.App.dw-sidepanel .dw-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.App.dw-sidepanel .dw-content > * {
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+}
