@@ -59,7 +59,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import logo from './digiwage-logo.png';
 import './App.css';
 import { generateMnemonic } from 'digiwagejs-wallet';
-import { networks } from './digiwageNetworks';
+import { DEFAULT_NETWORK, NETWORK_CONFIGS, networkConfig, normalizeNetworkKey } from './digiwageNetworks';
 import { deployContract, deployFeeBreakdown, MAX_SCRIPT_ELEMENT_SIZE } from './deploy';
 import { supportsSidePanel, isSidePanelMode, getPanelMode, setPanelMode, openSidePanel, closeSidePanel } from './sidepanel';
 import VerticalSplit from '@material-ui/icons/VerticalSplit';
@@ -280,7 +280,7 @@ class App extends Component {
       passwordHash,
       accounts,
       activeAccount,
-      network: network === 'DIGIWAGE_MAINNET' ? 'DIGIWAGE_MAINNET' : 'DIGIWAGE_FORKTEST'
+      network: normalizeNetworkKey(network)
     }, this.loadActiveAccount);
   };
 
@@ -327,14 +327,10 @@ class App extends Component {
     if (!this.state.network) {
       const network = await this.getNetworkFromLocalStorage();
       if(network) {
-        if(network === 'DIGIWAGE_MAINNET') {
-          this.setState({ network: 'DIGIWAGE_MAINNET' });
-        } else {
-          this.setState({ network: 'DIGIWAGE_FORKTEST' });
-        }
+        this.setState({ network: normalizeNetworkKey(network) });
       } else {
-        this.setState({ network: 'DIGIWAGE_FORKTEST' });
-        await this.setNetworkLocalStorage('DIGIWAGE_FORKTEST');
+        this.setState({ network: DEFAULT_NETWORK });
+        await this.setNetworkLocalStorage(DEFAULT_NETWORK);
       }
     }
     this.loadPrice();
@@ -712,65 +708,28 @@ class App extends Component {
   };
 
   getNetwork = () =>{
-    if(this.state.network === 'DIGIWAGE_MAINNET')
-    {
-      return networks.digiwageMainnet;
-    }else if(this.state.network === 'DIGIWAGE_FORKTEST'){
-      return networks.digiwageForktest;
-    }else{
-      return networks.digiwageForktest;
-    }
+    return networkConfig(this.state.network).network;
   };
 
-  // TODO: replace with the permanent production explorer domain before release.
   getExplorerApiAddress = () =>{
-    if(this.state.network === 'DIGIWAGE_MAINNET')
-    {
-      return 'https://api.digiwage.org/insight-api/txs/?pageNum=0&address=';
-    }else if(this.state.network === 'DIGIWAGE_FORKTEST'){
-      return 'http://194.163.172.250:7001/insight-api/txs/?pageNum=0&address=';
-    }else{
-      return '';
-    }
+    return `${networkConfig(this.state.network).api}/insight-api/txs/?pageNum=0&address=`;
   };
 
-  getExplorerAddress = () =>{
-    if(this.state.network === 'DIGIWAGE_MAINNET')
-    {
-      return 'https://explorer.digiwage.org/address/';
-    }else if(this.state.network === 'DIGIWAGE_FORKTEST'){
-      return 'http://194.163.172.250:3000/address/';
-    }else{
-      return '';
-    }
+  // Explorer page link; networks sharing one explorer add a query string
+  // that switches it to the right chain.
+  explorerLink = path =>{
+    const config = networkConfig(this.state.network);
+    return `${config.explorer}/${path}${config.explorerQuery || ''}`;
   };
 
   coinToSatoshi = (amount) =>{
     return amount * 100000000;
   };
 
-  getExplorerTx = () =>{
-    if(this.state.network === 'DIGIWAGE_MAINNET')
-    {
-      return 'https://explorer.digiwage.org/tx/';
-    }else if(this.state.network === 'DIGIWAGE_FORKTEST'){
-      return 'http://194.163.172.250:3000/tx/';
-    }else{
-      return '';
-    }
-  };
-
   // DigiWage's own explorer (digiwage-explorer-api) exposes /misc/prices
   // for CoinId 1684 (WAGE).
   getPricesApiAddress = () =>{
-    if(this.state.network === 'DIGIWAGE_MAINNET')
-    {
-      return 'https://api.digiwage.org/misc/prices';
-    }else if(this.state.network === 'DIGIWAGE_FORKTEST'){
-      return 'http://194.163.172.250:7001/misc/prices';
-    }else{
-      return '';
-    }
+    return `${networkConfig(this.state.network).api}/misc/prices`;
   };
 
   //**************************
@@ -1199,7 +1158,7 @@ class App extends Component {
   }
 
   goToExplorerAddress = () => {
-    window.open(`${this.getExplorerAddress()}${this.state.address}`, '_blank');
+    window.open(this.explorerLink(`address/${this.state.address}`), '_blank');
   };
 
   showReceive = () => {
@@ -1400,8 +1359,9 @@ class App extends Component {
               value={this.state.networkInSelection}
               onChange={this.handleChange('networkInSelection')}
             >
-              <FormControlLabel value='DIGIWAGE_MAINNET' key='DIGIWAGE_MAINNET' control={<Radio />} label='Mainnet' />
-              <FormControlLabel value='DIGIWAGE_FORKTEST' key='DIGIWAGE_FORKTEST' control={<Radio />} label='Forktest' />
+              {Object.entries(NETWORK_CONFIGS).map(([key, config]) =>
+                <FormControlLabel value={key} key={key} control={<Radio />} label={config.label} />
+              )}
             </RadioGroup>
           </DialogContent>
           <DialogActions>
@@ -1684,7 +1644,7 @@ class App extends Component {
             }
           }
         }
-        let txurl = this.getExplorerTx() + transaction.txid;
+        let txurl = this.explorerLink(`tx/${transaction.txid}`);
         let isReceive = to === this.state.address;
         return (
           <a key={transaction.txid} href={txurl} target="_blank" rel="noopener noreferrer" className="dw-tx-row">
@@ -2262,7 +2222,7 @@ class App extends Component {
             label="Network"
             className="dw-confirm-field"
             autoComplete="off"
-            value={isMainnet ? 'DigiWage Mainnet' : 'DigiWage Forktest'}
+            value={`DigiWage ${networkConfig(this.state.network).label}`}
             helperText={isMainnet ? 'Real funds: deployments on mainnet are permanent.' : ''}
             margin="normal" />
           <TextField
@@ -2330,7 +2290,7 @@ class App extends Component {
 
   renderAppBar() {
     const isMainnet = this.state.network === 'DIGIWAGE_MAINNET';
-    const networkLabel = isMainnet ? 'Mainnet' : 'Forktest';
+    const networkLabel = networkConfig(this.state.network).label;
     return (
       <AppBar position="sticky" elevation={0} className="dw-sheet-appbar">
         <Toolbar className="dw-topbar" disableGutters>

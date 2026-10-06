@@ -16,16 +16,18 @@ const { Network, Insight } = DigiWageWallet;
 // the popup, so the background script needs its own copy. Both construct
 // their own Network objects here rather than relying on the library's
 // built-in NetworkNames, since this extension's network-name convention
-// (digiwage_mainnet/digiwage_forktest) differs from the library's own
+// (digiwage_mainnet/forktest/legacytest) differs from the library's own
 // (digiwage/digiwage_regtest).
 const DIGIWAGE_NETWORK_NAMES = {
     MAINNET: 'digiwage_mainnet',
     FORKTEST: 'digiwage_forktest',
+    LEGACYTEST: 'digiwage_legacytest',
 };
 // TODO: replace with the permanent production explorer domain before release.
 const DIGIWAGE_INSIGHT_BASEURLS = {
     [DIGIWAGE_NETWORK_NAMES.MAINNET]: 'https://api.digiwage.org/insight-api',
     [DIGIWAGE_NETWORK_NAMES.FORKTEST]: 'http://194.163.172.250:7001/insight-api',
+    [DIGIWAGE_NETWORK_NAMES.LEGACYTEST]: 'http://194.163.172.250:7011/insight-api',
 };
 // The vendored Insight class talks over axios, whose default browser
 // adapter needs XMLHttpRequest -- which doesn't exist in a service worker
@@ -92,7 +94,25 @@ const networks = {
         scriptHash: 110,
         wif: 239,
     }),
+    digiwageLegacytest: new Network({
+        name: DIGIWAGE_NETWORK_NAMES.LEGACYTEST,
+        messagePrefix: 'DigiWage Signed Message:\n',
+        bech32: 'dwt',
+        bip32: { public: 0x3a8061a0, private: 0x3a805837 },
+        pubKeyHash: 139,
+        scriptHash: 19,
+        wif: 239,
+    }),
 };
+
+// chrome.storage.local 'network' value -> Network; unknown values fall back
+// to forktest, like the popup.
+const NETWORK_BY_KEY = {
+    DIGIWAGE_MAINNET: networks.digiwageMainnet,
+    DIGIWAGE_FORKTEST: networks.digiwageForktest,
+    DIGIWAGE_LEGACYTEST: networks.digiwageLegacytest,
+};
+const networkForKey = key => NETWORK_BY_KEY[key] || networks.digiwageForktest;
 
 const getSessionState = keys => new Promise(resolve => {
     chrome.storage.session.get(keys, resolve);
@@ -134,13 +154,13 @@ const getCurrentAddress = async () => {
 // writes to chrome.storage.local, defaulting to forktest when unset.
 const getActiveNetwork = () => new Promise(resolve => {
     chrome.storage.local.get(['network'], ({network}) => {
-        resolve(network === 'DIGIWAGE_MAINNET' ? networks.digiwageMainnet : networks.digiwageForktest);
+        resolve(networkForKey(network));
     });
 });
 
 const getNetworkName = () => new Promise(resolve => {
     chrome.storage.local.get(['network'], ({network}) => {
-        resolve(network === 'DIGIWAGE_MAINNET' ? DIGIWAGE_NETWORK_NAMES.MAINNET : DIGIWAGE_NETWORK_NAMES.FORKTEST);
+        resolve(networkForKey(network).name);
     });
 });
 
@@ -277,8 +297,7 @@ chrome.storage.onChanged.addListener((changes, area) => {
         broadcastEvent('accountsChanged', account ? account.address : null);
     }
     if (area === 'local' && changes.network) {
-        broadcastEvent('networkChanged', changes.network.newValue === 'DIGIWAGE_MAINNET'
-            ? DIGIWAGE_NETWORK_NAMES.MAINNET : DIGIWAGE_NETWORK_NAMES.FORKTEST);
+        broadcastEvent('networkChanged', networkForKey(changes.network.newValue).name);
     }
 });
 
