@@ -7,7 +7,7 @@
 // Insight.forNetwork is a plain static method on an exported class, though,
 // so we patch it once at startup: the library's own built-in network names
 // still resolve through the original implementation, and this extension's
-// own network names (digiwage_mainnet/forktest/legacytest) resolve to our
+// own network names (digiwage_mainnet/forktest/legacytest/testnet) resolve to our
 // explorer's Insight-compatible API (see digiwage-explorer-api's
 // /insight-api/* routes). This keeps digiwagejs-wallet itself completely
 // unmodified.
@@ -17,6 +17,7 @@ export const NetworkNames = {
   DIGIWAGE_MAINNET: 'digiwage_mainnet',
   DIGIWAGE_FORKTEST: 'digiwage_forktest',
   DIGIWAGE_LEGACYTEST: 'digiwage_legacytest',
+  DIGIWAGE_TESTNET: 'digiwage_testnet',
 };
 
 // TODO: replace with the permanent production API domain before release.
@@ -24,6 +25,7 @@ const DIGIWAGE_INSIGHT_BASEURLS = {
   [NetworkNames.DIGIWAGE_MAINNET]: 'https://api.digiwage.org/insight-api',
   [NetworkNames.DIGIWAGE_FORKTEST]: 'http://194.163.172.250:7001/insight-api',
   [NetworkNames.DIGIWAGE_LEGACYTEST]: 'http://194.163.172.250:7011/insight-api',
+  [NetworkNames.DIGIWAGE_TESTNET]: 'http://194.163.172.250:7021/insight-api',
 };
 
 const originalForNetwork = Insight.forNetwork.bind(Insight);
@@ -81,10 +83,23 @@ const digiwageLegacytestInfo = {
   wif: 239,
 };
 
+// The v3 testnet (-testnet): its own genesis and CTestNetParams prefixes.
+// Addresses start with 't' (P2SH 's'), bech32 'tdw', extended keys tdwp/tdws.
+const digiwageTestnetInfo = {
+  name: NetworkNames.DIGIWAGE_TESTNET,
+  messagePrefix: 'DigiWage Signed Message:\n',
+  bech32: 'tdw',
+  bip32: { public: 0x043199df, private: 0x043199f4 },
+  pubKeyHash: 127,
+  scriptHash: 125,
+  wif: 247,
+};
+
 export const networks = {
   digiwageMainnet: new Network(digiwageMainnetInfo),
   digiwageForktest: new Network(digiwageForktestInfo),
   digiwageLegacytest: new Network(digiwageLegacytestInfo),
+  digiwageTestnet: new Network(digiwageTestnetInfo),
 };
 
 // Everything the popup needs per network, keyed by the value stored under
@@ -110,6 +125,14 @@ export const NETWORK_CONFIGS = {
     // The explorer picks its network from the dw-network cookie, set by ?network=.
     explorer: 'http://194.163.172.250:3000',
     explorerQuery: '?network=legacytest',
+  },
+  DIGIWAGE_TESTNET: {
+    label: 'Testnet',
+    network: networks.digiwageTestnet,
+    // Not running yet: the API answers once the testnet indexer is deployed.
+    api: 'http://194.163.172.250:7021',
+    explorer: 'http://194.163.172.250:3000',
+    explorerQuery: '?network=testnet',
   },
 };
 

@@ -16,18 +16,20 @@ const { Network, Insight } = DigiWageWallet;
 // the popup, so the background script needs its own copy. Both construct
 // their own Network objects here rather than relying on the library's
 // built-in NetworkNames, since this extension's network-name convention
-// (digiwage_mainnet/forktest/legacytest) differs from the library's own
+// (digiwage_mainnet/forktest/legacytest/testnet) differs from the library's own
 // (digiwage/digiwage_regtest).
 const DIGIWAGE_NETWORK_NAMES = {
     MAINNET: 'digiwage_mainnet',
     FORKTEST: 'digiwage_forktest',
     LEGACYTEST: 'digiwage_legacytest',
+    TESTNET: 'digiwage_testnet',
 };
 // TODO: replace with the permanent production explorer domain before release.
 const DIGIWAGE_INSIGHT_BASEURLS = {
     [DIGIWAGE_NETWORK_NAMES.MAINNET]: 'https://api.digiwage.org/insight-api',
     [DIGIWAGE_NETWORK_NAMES.FORKTEST]: 'http://194.163.172.250:7001/insight-api',
     [DIGIWAGE_NETWORK_NAMES.LEGACYTEST]: 'http://194.163.172.250:7011/insight-api',
+    [DIGIWAGE_NETWORK_NAMES.TESTNET]: 'http://194.163.172.250:7021/insight-api',
 };
 // The vendored Insight class talks over axios, whose default browser
 // adapter needs XMLHttpRequest -- which doesn't exist in a service worker
@@ -103,6 +105,15 @@ const networks = {
         scriptHash: 19,
         wif: 239,
     }),
+    digiwageTestnet: new Network({
+        name: DIGIWAGE_NETWORK_NAMES.TESTNET,
+        messagePrefix: 'DigiWage Signed Message:\n',
+        bech32: 'tdw',
+        bip32: { public: 0x043199df, private: 0x043199f4 },
+        pubKeyHash: 127,
+        scriptHash: 125,
+        wif: 247,
+    }),
 };
 
 // chrome.storage.local 'network' value -> Network; unknown values fall back
@@ -111,6 +122,7 @@ const NETWORK_BY_KEY = {
     DIGIWAGE_MAINNET: networks.digiwageMainnet,
     DIGIWAGE_FORKTEST: networks.digiwageForktest,
     DIGIWAGE_LEGACYTEST: networks.digiwageLegacytest,
+    DIGIWAGE_TESTNET: networks.digiwageTestnet,
 };
 const networkForKey = key => NETWORK_BY_KEY[key] || networks.digiwageForktest;
 
