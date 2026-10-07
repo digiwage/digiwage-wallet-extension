@@ -65,8 +65,8 @@
     isDigiWageLight: true,
     version: 2,
 
-    // Resolves to 'digiwage_mainnet', 'digiwage_forktest', 'digiwage_legacytest'
-    // or 'digiwage_testnet', the network the wallet is currently switched to.
+    // Resolves to 'digiwage_mainnet' or 'digiwage_testnet', the network the
+    // wallet is currently switched to.
     getNetwork: () => send('getNetwork', {}),
 
     // Subscribe to wallet events. Supported: 'accountsChanged' (payload: new

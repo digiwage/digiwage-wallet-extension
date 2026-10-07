@@ -132,7 +132,7 @@ body {
   box-shadow: 0 0 0 3px var(--dw-success-bg);
 }
 
-.dw-network-dot.forktest {
+.dw-network-dot.testnet {
   background: var(--dw-accent);
   box-shadow: 0 0 0 3px rgba(240,196,84,0.16);
 }

@@ -7,24 +7,19 @@
 // Insight.forNetwork is a plain static method on an exported class, though,
 // so we patch it once at startup: the library's own built-in network names
 // still resolve through the original implementation, and this extension's
-// own network names (digiwage_mainnet/forktest/legacytest/testnet) resolve to our
-// explorer's Insight-compatible API (see digiwage-explorer-api's
-// /insight-api/* routes). This keeps digiwagejs-wallet itself completely
-// unmodified.
+// own network names (digiwage_mainnet/testnet) resolve to our explorer's
+// Insight-compatible API (see digiwage-explorer-api's /insight-api/*
+// routes). This keeps digiwagejs-wallet itself completely unmodified.
 import { Insight, Network } from 'digiwagejs-wallet';
 
 export const NetworkNames = {
   DIGIWAGE_MAINNET: 'digiwage_mainnet',
-  DIGIWAGE_FORKTEST: 'digiwage_forktest',
-  DIGIWAGE_LEGACYTEST: 'digiwage_legacytest',
   DIGIWAGE_TESTNET: 'digiwage_testnet',
 };
 
 // TODO: replace with the permanent production API domain before release.
 const DIGIWAGE_INSIGHT_BASEURLS = {
   [NetworkNames.DIGIWAGE_MAINNET]: 'https://api.digiwage.org/insight-api',
-  [NetworkNames.DIGIWAGE_FORKTEST]: 'http://194.163.172.250:7001/insight-api',
-  [NetworkNames.DIGIWAGE_LEGACYTEST]: 'http://194.163.172.250:7011/insight-api',
   [NetworkNames.DIGIWAGE_TESTNET]: 'http://194.163.172.250:7021/insight-api',
 };
 
@@ -57,32 +52,6 @@ const digiwageMainnetInfo = {
   wif: 89,
 };
 
-// Same base58/bip32/message values as forktest's CRegTestParams base --
-// CForkTestParams does not override them (verified against source: no
-// base58Prefixes/bech32_hrp assignment in CForkTestParams itself).
-const digiwageForktestInfo = {
-  name: NetworkNames.DIGIWAGE_FORKTEST,
-  messagePrefix: 'DigiWage Signed Message:\n',
-  bech32: 'qcrt',
-  bip32: { public: 70617039, private: 70615956 },
-  pubKeyHash: 120,
-  scriptHash: 110,
-  wif: 239,
-};
-
-// The v3 node following the legacy (PIVX-era) testnet: CLegacyTestParams
-// (-chain=legacytest) sets its own base58Prefixes and bech32_hrp, so these
-// differ from forktest. Addresses start with 'x'/'y'.
-const digiwageLegacytestInfo = {
-  name: NetworkNames.DIGIWAGE_LEGACYTEST,
-  messagePrefix: 'DigiWage Signed Message:\n',
-  bech32: 'dwt',
-  bip32: { public: 0x3a8061a0, private: 0x3a805837 },
-  pubKeyHash: 139,
-  scriptHash: 19,
-  wif: 239,
-};
-
 // The v3 testnet (-testnet): its own genesis and CTestNetParams prefixes.
 // Addresses start with 't' (P2SH 's'), bech32 'tdw', extended keys tdwp/tdws.
 const digiwageTestnetInfo = {
@@ -97,8 +66,6 @@ const digiwageTestnetInfo = {
 
 export const networks = {
   digiwageMainnet: new Network(digiwageMainnetInfo),
-  digiwageForktest: new Network(digiwageForktestInfo),
-  digiwageLegacytest: new Network(digiwageLegacytestInfo),
   digiwageTestnet: new Network(digiwageTestnetInfo),
 };
 
@@ -112,20 +79,6 @@ export const NETWORK_CONFIGS = {
     api: 'https://api.digiwage.org',
     explorer: 'https://explorer.digiwage.org',
   },
-  DIGIWAGE_FORKTEST: {
-    label: 'Forktest',
-    network: networks.digiwageForktest,
-    api: 'http://194.163.172.250:7001',
-    explorer: 'http://194.163.172.250:3000',
-  },
-  DIGIWAGE_LEGACYTEST: {
-    label: 'Legacy Testnet',
-    network: networks.digiwageLegacytest,
-    api: 'http://194.163.172.250:7011',
-    // The explorer picks its network from the dw-network cookie, set by ?network=.
-    explorer: 'http://194.163.172.250:3000',
-    explorerQuery: '?network=legacytest',
-  },
   DIGIWAGE_TESTNET: {
     label: 'Testnet',
     network: networks.digiwageTestnet,
@@ -136,7 +89,7 @@ export const NETWORK_CONFIGS = {
   },
 };
 
-export const DEFAULT_NETWORK = 'DIGIWAGE_FORKTEST';
+export const DEFAULT_NETWORK = 'DIGIWAGE_TESTNET';
 
 export const networkConfig = key => NETWORK_CONFIGS[key] || NETWORK_CONFIGS[DEFAULT_NETWORK];
 

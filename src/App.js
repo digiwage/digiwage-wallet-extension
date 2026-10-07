@@ -2303,7 +2303,7 @@ class App extends Component {
             { this.state.network &&
               <Tooltip title="Switch network">
                 <button className="dw-network-pill" onClick={this.showNetwork}>
-                  <span className={`dw-network-dot ${isMainnet ? 'mainnet' : 'forktest'}`} />
+                  <span className={`dw-network-dot ${isMainnet ? 'mainnet' : 'testnet'}`} />
                   {networkLabel}
                   <KeyboardArrowDown className="dw-network-caret" />
                 </button>
